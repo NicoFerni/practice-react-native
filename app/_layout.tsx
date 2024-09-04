@@ -1,37 +1,42 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import GameInfo from "@/components/GameInfo";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import GameList from "@/app/GameList";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+type RootStackParamList = {
+  GameList: undefined;
+  GameInfo: { gameId: string };
+};
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const Stack = createStackNavigator<RootStackParamList>();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+const linking = {
+  prefixes: ['https://myapp.com', 'myapp://'],
+  config: {
+    screens: {
+      GameList: 'gamelist',
+      GameInfo: {
+        path: 'gameinfo/:gameId',
+        parse: {
+          gameId: (gameId: string) => `${gameId}`,
+        },
+      },
+    },
+  },
+};
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+export default function App() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Provider store={store}>
+      <NavigationContainer linking={linking} independent={true}>
+        <Stack.Navigator initialRouteName="GameList">
+          <Stack.Screen name="GameList" component={GameList} />
+          <Stack.Screen name="GameInfo" component={GameInfo} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
+
   );
 }
