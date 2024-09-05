@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import GameInfo from "@/components/GameInfo";
 import { Provider } from "react-redux";
 import { store } from "./store";
-import GameList from "@/app/GameList";
+import GameList from "@/components/GameList";
 
 type RootStackParamList = {
   GameList: undefined;
@@ -12,22 +12,18 @@ type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const linking = {
-  prefixes: ['https://myapp.com', 'myapp://'],
-  config: {
-    screens: {
-      GameList: 'gamelist',
-      GameInfo: {
-        path: 'gameinfo/:gameId',
-        parse: {
-          gameId: (gameId: string) => `${gameId}`,
+export default function App() {
+  const linking = {
+    prefixes: ['https://myapp.com', 'myapp://'],
+    config: {
+      screens: {
+        GameList: 'gamelist',
+      GameInfo: 'gameinfo/:gameId',
         },
       },
-    },
-  },
-};
+    }
 
-export default function App() {
+
   return (
     <Provider store={store}>
       <NavigationContainer linking={linking} independent={true}>

@@ -57,16 +57,18 @@ export default function GameInfo({ route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
+    margin: 20,
     padding: 20,
     alignItems: "center",
-    backgroundColor: "#d0fff8",
+    backgroundColor: "#808080",
     borderRadius: 20,
+    marginTop: 25,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
   },
   image: {
     width: 200,
